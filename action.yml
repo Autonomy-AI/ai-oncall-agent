@@ -109,7 +109,7 @@ runs:
         claude_code_oauth_token: ${{ inputs.claude_code_oauth_token }}
         github_token: ${{ inputs.github_token }}
         show_full_output: true
-        claude_args: "${{ inputs.claude_model != '' && format('--model {0} ', inputs.claude_model) || '' }}--allowedTools Bash,Read,Write,mcp__linear-server__list_issues,mcp__linear-server__create_issue,mcp__linear-server__get_issue${{ inputs.additional_allowed_tools != '' && format(',{0}', inputs.additional_allowed_tools) || '' }}"
+        claude_args: "${{ inputs.claude_model != '' && format('--model {0} ', inputs.claude_model) || '' }}--allowedTools Bash,Read,Write,mcp__linear-server__list_issues,mcp__linear-server__create_issue,mcp__linear-server__get_issue,mcp__linear-server__save_issue${{ inputs.additional_allowed_tools != '' && format(',{0}', inputs.additional_allowed_tools) || '' }}"
         prompt: |
           You are a DevOps monitoring agent. Check Datadog for errors in the last ${{ inputs.hours_back }} hour(s) and create Linear tickets.
 
@@ -179,13 +179,13 @@ runs:
           - If a ticket is "Done"/"Canceled" but was updated WITHIN the last 24 hours, SKIP (give time for fix to propagate)
 
           ### Step 5: Create Linear Tickets
-          For EACH unique error that doesn't have an existing ticket, use `mcp__linear-server__create_issue`:
+          For EACH unique error that doesn't have an existing ticket, use `mcp__linear-server__save_issue` (or `create_issue` if `save_issue` is unavailable):
           - team: "${{ inputs.linear_team }}"
           - title: "${{ inputs.ticket_prefix }} <concise error title>" (avoid parentheses in titles — use dashes instead)
           - priority: 2 (High) for critical errors, 3 (Normal) for regular errors
-          ${{ inputs.linear_label_ids != '' && format('- labelIds: [{0}]', inputs.linear_label_ids) || '' }}
+          ${{ inputs.linear_label_ids != '' && format('- labels: [{0}]', inputs.linear_label_ids) || '' }}
 
-          **IMPORTANT**: After calling `create_issue`, capture the `id`, `identifier`, and `url` from the response.
+          **IMPORTANT**: After calling `save_issue`, capture the `id`, `identifier`, and `url` from the response.
 
           Use this markdown template for the description:
           ```markdown
