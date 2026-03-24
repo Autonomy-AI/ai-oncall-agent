@@ -89,6 +89,20 @@ runs:
       with:
         node-version: '20'
 
+    - name: Pre-install MCP servers
+      shell: bash
+      run: |
+        npm install -g @linear/mcp-server-linear
+        # Pre-install any additional stdio MCP servers from the config
+        ADDITIONAL='${{ inputs.additional_mcp_config }}'
+        if [ -n "$ADDITIONAL" ]; then
+          # Extract command+args patterns like ["npx","-y","pkg@version",...] and install the package
+          echo "$ADDITIONAL" | jq -r 'to_entries[] | select(.value.command == "npx") | .value.args[] | select(startswith("-") | not)' 2>/dev/null | while read -r pkg; do
+            echo "Pre-installing MCP package: $pkg"
+            npm install -g "$pkg"
+          done
+        fi
+
     - name: Create MCP Config
       shell: bash
       run: |
