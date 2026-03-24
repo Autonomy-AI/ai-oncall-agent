@@ -93,7 +93,7 @@ runs:
       shell: bash
       run: |
         # Build base config with Linear server
-        BASE='{"mcpServers":{"linear-server":{"command":"npx","args":["-y","@linear/mcp-server-linear"],"env":{"LINEAR_API_KEY":"${{ inputs.linear_api_key }}"}}}}'
+        BASE='{"mcpServers":{"linear-server":{"type":"http","url":"https://mcp.linear.app/mcp","headers":{"Authorization":"Bearer ${{ inputs.linear_api_key }}"}}}}'
 
         ADDITIONAL='${{ inputs.additional_mcp_config }}'
         if [ -n "$ADDITIONAL" ]; then
