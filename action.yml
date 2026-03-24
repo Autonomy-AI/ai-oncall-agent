@@ -232,7 +232,7 @@ runs:
           ### Step 5.5: Enhanced Root Cause Analysis
           Before creating tickets, perform a deeper root cause analysis for EACH error group:
 
-          1. **Read the RCA instructions** from `{0}` using the Read tool.
+          1. **Read the RCA instructions** from `{0}` using the Read tool. If the file does not exist, skip this entire step and proceed to Step 6.
           2. **Build a context block** for each error group from the Datadog logs you already have. Extract all structured identifiers and metadata from the log attributes (e.g., any UUIDs, trace IDs, request IDs, service names, file paths, function names, timestamps). Include the full error message and pattern.
           3. **Follow the RCA file instructions** passing ALL extracted context so the instructions can use whatever identifiers are relevant to query their telemetry backend. This is a non-interactive, automated run — do not prompt for input, do not save files locally, and produce only text output. If the file expects identifiers you don''t have, skip that error group''s deep RCA and fall back to the Datadog-only analysis.
           4. **Use the RCA output** to enrich each ticket''s "Root Cause Analysis" and "Suggested Fix" sections with evidence-backed findings instead of guessing.
